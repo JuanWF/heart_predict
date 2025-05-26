@@ -20,10 +20,11 @@ public class GeminiService {
 
     public String getSuggestion(String predictionText, String patientSummary) {
         try {
-            String prompt = "Soy un sistema médico experto. El resultado de la predicción es: "
-                    + predictionText
-                    + ". Datos del paciente: " + patientSummary
-                    + ". Dame una sugerencia clínica o recomendación profesional médica para este caso, como si fuera un cardiólogo.";
+            String prompt = "Soy un cardiólogo. Basado en el siguiente caso clínico:\n"
+                    + "Resultado de predicción: " + predictionText + ".\n"
+                    + "Resumen del paciente: " + patientSummary + ".\n"
+                    + "Dame una recomendación clínica breve (máximo 2 líneas), clara y directa para este caso.";
+
 
             String requestBody = """
                     {
