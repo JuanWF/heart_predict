@@ -1,10 +1,12 @@
 package com.example.predictor.controller;
 
+import com.example.predictor.dto.PredictionResponse;
 import com.example.predictor.model.PatientData;
 import com.example.predictor.service.PredictionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -15,22 +17,18 @@ public class PredictionController {
     private PredictionService predictionService;
 
     @PostMapping
-    public Map<String, String> predict(@RequestBody PatientData data) {
-        Map<String, String> response = new HashMap<>();
-
-        // Obtener predicción del modelo Weka
+    public PredictionResponse predict(@RequestBody PatientData data) {
         String prediction = predictionService.predict(data);
-        response.put("prediction", prediction);
 
+        String suggestion;
         try {
-            // Llamada al API Gemini y análisis de la sugerencia
-            String suggestion = predictionService.getGeminiSuggestion(prediction, data);
-            response.put("suggestion", suggestion);
+            suggestion = predictionService.getGeminiSuggestion(prediction, data);
         } catch (Exception e) {
-            e.printStackTrace();
-            response.put("suggestion", "No se pudo obtener una sugerencia del modelo Gemini.");
+            suggestion = "No se pudo obtener una sugerencia del modelo Gemini.";
         }
 
-        return response;
+        List<String> stats = predictionService.generateStatistics(data);
+
+        return new PredictionResponse(prediction, suggestion, stats);
     }
 }

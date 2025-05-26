@@ -87,4 +87,50 @@ public class PredictionService {
 
         return geminiService.getSuggestion(predictionText, summary);
     }
+
+    public List<String> generateStatistics(PatientData data) {
+        List<String> stats = new ArrayList<>();
+
+        // Edad
+        if (data.getAge() < 40) {
+            stats.add("Edad: Joven (<40)");
+        } else if (data.getAge() <= 60) {
+            stats.add("Edad: Mediana (40-60)");
+        } else {
+            stats.add("Edad: Mayor (>60)");
+        }
+
+        // Colesterol
+        if (data.getCholesterol() < 200) {
+            stats.add("Colesterol: Deseable (<200 mg/dL)");
+        } else if (data.getCholesterol() < 240) {
+            stats.add("Colesterol: Límite alto (200–239 mg/dL)");
+        } else {
+            stats.add("Colesterol: Alto (≥240 mg/dL)");
+        }
+
+        // Presión en reposo
+        if (data.getRestingbp() < 120) {
+            stats.add("Presión arterial: Normal (<120 mm Hg)");
+        } else if (data.getRestingbp() <= 139) {
+            stats.add("Presión arterial: Prehipertensión (120–139 mm Hg)");
+        } else {
+            stats.add("Presión arterial: Hipertensión (≥140 mm Hg)");
+        }
+
+        // Frecuencia cardíaca máxima
+        if (data.getMaxhr() < 100) {
+            stats.add("Frecuencia máxima: Baja (<100 bpm)");
+        } else if (data.getMaxhr() <= 160) {
+            stats.add("Frecuencia máxima: Normal (100–160 bpm)");
+        } else {
+            stats.add("Frecuencia máxima: Alta (>160 bpm)");
+        }
+
+        // Angina por ejercicio
+        stats.add("Angina inducida por ejercicio: " + (data.getExerciseangina().equals("Y") ? "Sí" : "No"));
+
+        return stats;
+    }
+
 }
